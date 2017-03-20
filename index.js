@@ -8,7 +8,6 @@ var config = {
   };
   
   firebase.initializeApp(config);
- // firebase.initializeApp(config);
   console.log('running client');
 
  /* create user 
@@ -27,22 +26,65 @@ firebase.auth().createUserWithEmailAndPassword('test@test.com', 'test123')
 });
 */
 
-const credential = firebase.auth.EmailAuthProvider.credential(
-    'test@test.com', 
-    'test123'
-);
+//requires authentication doesn't work without sign in
+ //addUserInfo('firstName'+'','firstName','lastName','member'); 
 
-
+// login 
 var userInfo =firebase.auth().signInWithEmailAndPassword('test@test.com', 
     'test123').then(function(user) {
     var user = firebase.auth().currentUser;
     console.log(user); // Optional
+    console.log("current user id"+user.uid);
+    var uid = user.uid;
+    //addUserInfo(uid,'firstName'+'','lastName','member');
+    //editUserInfo(uid,'firstName'+'','lastName','member');
 }, function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
 });
 
+// adding user information
+function addUserInfo(uid,firstName, lastName,userRole)
+{
+var userInfoRef = firebase.database().ref("users/personal/");
+userInfoRef.child(uid).set({
+      firstname: firstName,
+      lastname: lastName,
+      role:userRole
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+   }
+}
+// update existing user information
+function editUserInfo(uid,firstName, lastName,userRole)
+{
+  var userInfoRef = firebase.database().ref("users/personal/");
+  var userRef = userInfoRef.child(uid);
+userRef.update({
+       "firstname": firstName,
+      "lastname": lastName,
+     "role":userRole
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+   }
+}
+
+// create job posting
+
+// edit job posting
+
+//delete job posting
+
+//
 
 
 /* admin setup
@@ -69,4 +111,3 @@ playersRef.set({
       age: 20
    }
 });*/
-
