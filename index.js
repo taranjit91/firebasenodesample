@@ -225,6 +225,73 @@ jobsRef.orderByChild("city").equalTo('scarborough').on("child_added", function(s
 
 /* ********************  employer QUERIES ends    ************************ */
 
+/* ********************  RATING EMPLOYERS/COMPANIES  starts    ************************ */
+// give rating to employer
+function giveRating(uid,companyName,employerid, rating, comment)
+{
+var ratingNodeRef = firebase.database().ref("ratings/");
+ratingNodeRef.push({ // using push for inserting record will create id for each record automatically
+      uid: uid,
+      companyName: companyName,
+      employerid: employerid,
+      company_address:company_address,
+      rating: rating,
+      comment: comment
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+   }
+}
+
+// edit employer information
+function updateRating(uid,ratingId,companyName,employerid, rating, comment)
+{
+var ratingNodeRef = firebase.database().ref("ratings/");
+var ratingRef = empRef.child(ratingId);
+employerRef.update({
+       uid: uid,
+      companyName: companyName,
+      employerid: employerid,
+      company_address:company_address,
+      rating: rating,
+      comment: comment 
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+}
+}
+//delete employer information
+function deleteRating(ratingid,uid)
+{
+var rateRef = firebase.database().ref("ratings/");
+var ratingRef = empRef.child(ratingid);
+// can check the user id also if it is the same for user who has created posting
+postingRef.remove(ratingRef), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+  }
+}
+
+function searchEmployers(searchOn, searchByVal)
+{
+  var jobsRef = firebase.database().ref("ratings/");
+  // replace companyName by searchOn and the value by searchByVal 
+jobsRef.orderByChild("companyName").equalTo('alpha one').on("child_added", function(snapshot) {
+  console.log(snapshot.key);// key object
+});
+}
+
+/* ********************  RATING EMPLOYERS/COMPANIES QUERIES ends    ************************ */
+
 
 
 /* admin setup
