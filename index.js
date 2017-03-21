@@ -79,7 +79,7 @@ userRef.update({
    }
 }
 
-/* ********************  JOB POSTINGS QUERIES ENDS    ************************ */
+/* ********************  JOB POSTINGS QUERIES starts    ************************ */
 // create job posting
 function createJobPosting(uid,title,company,company_address, job_description,job_type,location,salary,tags)
 {
@@ -152,10 +152,78 @@ jobsRef.orderByChild("location").equalTo('scarborough').on("child_added", functi
 
 /* ********************  JOB POSTINGS QUERIES ENDS    ************************ */
  
+/* ********************  employer QUERIES starts    ************************ */
+// create job posting
+function createEmployerProfile(uid,companyName,company_address, city,contactEmail,contactNumber,contactName,industryCategory)
+{
+var employerRef = firebase.database().ref("employers/");
+employerRef.push({ // using push for inserting record will create id for each record automatically
+      uid: uid,
+      companyName: companyName,
+      company: company,
+      company_address:company_address,
+      city: city,
+      contactEmail: contactEmail,
+      contactNumber: contactNumber,
+      contactName: contactName,
+      industryCategory: industryCategory
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+   }
+}
 
+// edit employer information
+function updateEmployerInfo(uid,employerid,companyName,company_address, city,contactEmail,contactNumber,contactName,industryCategory)
+{
+var empRef = firebase.database().ref("employers/");
+var employerRef = empRef.child(employerid);
+employerRef.update({
+      uid: uid,
+      companyName: companyName,
+      company: company,
+      company_address:company_address,
+      city: city,
+      contactEmail: contactEmail,
+      contactNumber: contactNumber,
+      contactName: contactName,
+      industryCategory: industryCategory  
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+}
+}
+//delete employer information
+function deleteJobPosting(postingid,uid)
+{
+var empRef = firebase.database().ref("employers/");
+var employerRef = empRef.child(employerid);
+// can check the user id also if it is the same for user who has created posting
+postingRef.remove(employerRef), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+  }
+}
 
+function searchEmployers(searchOn, searchByVal)
+{
+  var jobsRef = firebase.database().ref("employers/");
+  // replace location by searchOn and the value by searchByVal 
+jobsRef.orderByChild("city").equalTo('scarborough').on("child_added", function(snapshot) {
+  console.log(snapshot.key);// key object
+});
+}
 
-
+/* ********************  employer QUERIES ends    ************************ */
 
 
 
