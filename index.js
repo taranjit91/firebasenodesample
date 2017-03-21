@@ -1,49 +1,48 @@
 var firebase = require('firebase');
 var config = {
-    apiKey: "AIzaSyCPydI_Vzq2WR9hp5YfOFEZQWI4J3hPSoI",
-    authDomain: "comp231-59031.firebaseapp.com",
-    databaseURL: "https://comp231-59031.firebaseio.com",
-    storageBucket: "comp231-59031.appspot.com",
-    messagingSenderId: "889658949600"
+   apiKey: "AIzaSyCxWVz5cArT737pxeIHaZxeO246muY_d3c",
+    authDomain: "comp231-centage.firebaseapp.com",
+    databaseURL: "https://comp231-centage.firebaseio.com",
+    storageBucket: "comp231-centage.appspot.com",
+    messagingSenderId: "809164555117"   
   };
   
   firebase.initializeApp(config);
-  console.log('running client');
+  console.log('running client'+new Date()/1);
+  signinUser('parmar.taran@gmail.com','test123');
 
- /* create user 
-
-firebase.auth().createUserWithEmailAndPassword('test@test.com', 'test123')
-    .catch(function(error) {
-  // Handle Errors here.
-  var errorCode = error.code;
-  var errorMessage = error.message;
-  if (errorCode == 'auth/weak-password') {
-    console.log('The password is too weak.');
-  } else {
-    alert(errorMessage);
-  }
-  console.log(error);
+ // create user 
+function registerUser(email, password){
+firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(function(user) {
+      var user = firebase.auth().currentUser;
+      addUserInfo(user.uid,'Taranjit','Kaur','employer');
+    }
+    , function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
 });
-*/
-
-//requires authentication doesn't work without sign in
- //addUserInfo('firstName'+'','firstName','lastName','member'); 
+}
+ 
 
 // login 
-var userInfo =firebase.auth().signInWithEmailAndPassword('test@test.com', 
-    'test123').then(function(user) {
+function signinUser(email, password){
+var userInfo =firebase.auth().signInWithEmailAndPassword(email, 
+    password).then(function(user) {
     var user = firebase.auth().currentUser;
-    console.log(user); // Optional
-    console.log("current user id"+user.uid);
+   // console.log(user); // Optional
+    console.log("current user id :: "+user.uid);
     var uid = user.uid;
-    //addUserInfo(uid,'firstName'+'','lastName','member');
+    //addUserInfo(uid,'firstName'+'','tommm ','member');
     //editUserInfo(uid,'firstName'+'','lastName','member');
+   // createJobPosting(uid,'Business Analyst Internship','Alpha One','940 Progress Ave','Newly Graduates','internship','scarborough','55000-75000','IT, Software Developer');
 }, function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
 });
-
+}
 // adding user information
 function addUserInfo(uid,firstName, lastName,userRole)
 {
@@ -60,6 +59,7 @@ userInfoRef.child(uid).set({
   };
    }
 }
+
 // update existing user information
 function editUserInfo(uid,firstName, lastName,userRole)
 {
@@ -68,7 +68,7 @@ function editUserInfo(uid,firstName, lastName,userRole)
 userRef.update({
        "firstname": firstName,
       "lastname": lastName,
-     "role":userRole
+     "role":userRole     
    }), function(error) {
   if (error) {
     console.log("Data could not be saved." + error);
@@ -79,9 +79,50 @@ userRef.update({
 }
 
 // create job posting
+function createJobPosting(uid,title,company,company_address, job_description,job_type,location,salary,tags)
+{
+var jobsRef = firebase.database().ref("jobs/postings/");
+jobsRef.push({ // using push for inserting record will create id for each record automatically
+      uid: uid,
+      title: title,
+      company: company,
+      company_address:company_address,
+      job_description: job_description,
+      job_type: job_type,
+      location: location,
+      salary: salary,
+      tags: tags
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+   }
+}
 
 // edit job posting
-
+function updateJobPosting(postingid,uid,title,company,company_address, job_description,job_type,location,salary,tags)
+{
+var jobsRef = firebase.database().ref("jobs/postings/");
+var postingRef = jobsRef.child(postingid);
+postingRef.update({
+       uid: uid,
+      title: title,
+      company: company,
+      company_address:company_address,
+      job_description: job_description,
+      job_type: job_type,
+      location: location,
+      salary: salary,
+      tags: tags   
+   }), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+}
 //delete job posting
 
 //
