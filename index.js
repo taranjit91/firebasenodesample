@@ -37,7 +37,8 @@ var userInfo =firebase.auth().signInWithEmailAndPassword(email,
     //addUserInfo(uid,'firstName'+'','tommm ','member');
     //editUserInfo(uid,'firstName'+'','lastName','member');
    // createJobPosting(uid,'Business Analyst Internship','Alpha One','940 Progress Ave','Newly Graduates','internship','scarborough','55000-75000','IT, Software Developer');
-}, function(error) {
+searchPostings();
+  }, function(error) {
     // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
@@ -78,6 +79,7 @@ userRef.update({
    }
 }
 
+/* ********************  JOB POSTINGS QUERIES ENDS    ************************ */
 // create job posting
 function createJobPosting(uid,title,company,company_address, job_description,job_type,location,salary,tags)
 {
@@ -123,9 +125,38 @@ postingRef.update({
     console.log("Data saved successfully.");
   };
 }
+}
 //delete job posting
+function deleteJobPosting(postingid,uid)
+{
+var jobsRef = firebase.database().ref("jobs/postings/");
+var postingRef = jobsRef.child(postingid);
+// can check the user id also if it is the same for user who has created posting
+postingRef.remove(postingRef), function(error) {
+  if (error) {
+    console.log("Data could not be saved." + error);
+  } else {
+    console.log("Data saved successfully.");
+  };
+  }
+}
 
-//
+function searchPostings(searchOn, searchByVal)
+{
+  var jobsRef = firebase.database().ref("jobs/postings/");
+  // replace location by searchOn and the value by searchByVal 
+jobsRef.orderByChild("location").equalTo('scarborough').on("child_added", function(snapshot) {
+  console.log(snapshot.key);
+});
+}
+
+/* ********************  JOB POSTINGS QUERIES ENDS    ************************ */
+ 
+
+
+
+
+
 
 
 /* admin setup
